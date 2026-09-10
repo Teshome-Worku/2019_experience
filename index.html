@@ -105,16 +105,35 @@
       </div>
     </section>
 
-    <!-- SCENE 6 — My anchor portrait -->
-    <section class="scene" id="scene-me" data-scene="me">
-      <div class="scene-content reveal-content">
-        <p class="caption fade-el pre-photo">Someone I'm grateful to know.<span class="am">የማውቃት አንድ ሰው ስላለ
-            አመሰግናለሁ።</span></p>
-        <div class="story-photo story-photo-anchor" id="anchor-photo-me">
-          <img src="./assets/my-photo-1.jpg" alt="A photo of me" loading="eager">
+    <!-- SCENE 6 — Personal reveal -->
+    <section class="scene love-scene" id="scene-me" data-scene="love">
+      <div class="scene-content">
+        <p class="love-kicker">There is a question hiding here.</p>
+        <button class="love-trigger" id="love-trigger" type="button">Who really loves you? <span
+            aria-hidden="true">&#9825;</span></button>
+        <div class="love-reveal" id="love-reveal" aria-live="polite">
+          <div class="love-photo story-photo"><img src="./assets/my-photo-1.jpg" alt="A photo of me" loading="eager">
+          </div>
+          <p class="love-message">Someone who made this little world for you.<span class="am">ይህን ትንሽ ዓለም ላንቺ የሰራ
+              ሰው።</span></p>
         </div>
-        <p class="caption fade-el">And someone who wanted to build<br>this little world, just for you.<span
-            class="am">እና ላንቺ ብቻ ይህን ትንሽ ዓለም<br>ለመስራት የፈለገ ሰው።</span></p>
+        <p class="love-hint" id="love-hint">Tap when you're ready</p>
+      </div>
+    </section>
+
+    <!-- SCENE 7 — Optional camera discovery -->
+    <section class="scene camera-scene" id="scene-camera" data-scene="camera">
+      <div class="scene-content">
+        <p class="camera-kicker">A small window into this moment.</p>
+        <button class="camera-trigger" id="camera-trigger" type="button">Look around <span
+            aria-hidden="true">&#10024;</span></button>
+        <p class="camera-status" id="camera-status">Your camera stays off until you choose to open it.</p>
+        <div class="camera-overlay" id="camera-overlay" hidden>
+          <video id="camera-video" autoplay playsinline muted></video>
+          <div class="camera-frame" aria-hidden="true"><span></span></div>
+          <p class="camera-message">You found something in the present moment.</p>
+          <button class="camera-close" id="camera-close" type="button">Close</button>
+        </div>
       </div>
     </section>
 
@@ -175,16 +194,18 @@
       </div>
     </section>
 
-    <!-- SCENE 13 — Final contact moment: my-photo-2 -->
+    <!-- SCENE 14 — Final contact moment: my-photo-2 -->
     <section class="scene final-photo-scene" id="scene-final-photo" data-scene="final-photo">
       <div class="scene-content">
         <div class="story-photo story-photo-final" id="final-photo">
           <img src="./assets/my-photo-2.jpg" alt="A final photo of me" loading="lazy">
         </div>
-        <p class="final-photo-line">Before the last page, one more hello.</p>
+        <p class="final-photo-line">One last question...</p>
+        <p class="final-photo-message">Would you like to say something?</p>
         <div class="contact-reveal" id="contact-reveal">
-          <button class="contact-btn" id="contact-btn" type="button">Talk to Teshe <span
-              aria-hidden="true">💬</span></button>
+          <div class="contact-actions" id="contact-actions"></div>
+          <button class="replay-btn" id="replay-btn" type="button">Replay <span
+              aria-hidden="true">&#8634;</span></button>
         </div>
       </div>
     </section>

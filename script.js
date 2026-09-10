@@ -8,6 +8,9 @@ const CONFIG = {
   herPhotos: ["./assets/her-photo-1.jpg", "./assets/her-photo-2.jpg", "./assets/her-photo-3.jpg"],
   myPhotos: ["./assets/my-photo-1.jpg", "./assets/my-photo-2.jpg"],
   musicPath: "",             // leave blank to use the built-in generative ambient score; set to e.g. "./assets/song.mp3" to use your own track instead
+  telegramUrl: "",           // e.g. "https://t.me/your-username" — leave blank to hide Telegram
+  phoneNumber: "",            // e.g. "+251..." — leave blank to hide calling
+  cameraEnabled: true,        // camera is always off until the visitor explicitly taps Look around
   newYearLineAmharic: "እንኳን ለ2019 ዓ.ም አደረሰሽ ❤️",
   hapticsEnabled: true        // tiny vibration on taps, where the device supports it
 };
