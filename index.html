@@ -79,36 +79,40 @@
       </div>
     </section>
 
-    <!-- SCENE 4 — Her photos (3D swipeable gallery) -->
+    <!-- SCENE 4 — Her anchor portrait -->
     <section class="scene" id="scene-her" data-scene="her">
       <div class="scene-content reveal-content">
-        <div class="carousel-wrap" id="her-carousel" data-count="3">
-          <div class="carousel-track" id="her-track">
-            <div class="carousel-card"><img src="./assets/her-photo-1.jpg" alt="A photo of her" loading="lazy"></div>
-            <div class="carousel-card"><img src="./assets/her-photo-2.jpg" alt="A photo of her" loading="lazy"></div>
-            <div class="carousel-card"><img src="./assets/her-photo-3.jpg" alt="A photo of her" loading="lazy"></div>
-          </div>
+        <div class="story-photo story-photo-anchor" id="anchor-photo-her">
+          <img src="./assets/her-photo-1.jpg" alt="A portrait of her" loading="eager">
         </div>
-        <div class="carousel-dots" id="her-dots" aria-hidden="true"></div>
-        <p class="carousel-hint">swipe</p>
         <p class="caption fade-el">Some people walk in quietly,<br>and somehow end up mattering the most.<span
             class="am">አንዳንድ ሰዎች ጸጥ ብለው ይገባሉ፣<br>ሳይታወቅ ግን በጣም አስፈላጊ ይሆናሉ።</span></p>
       </div>
     </section>
 
-    <!-- SCENE 5 — My photos (3D swipeable gallery) -->
+    <!-- SCENE 5 — Hidden discovery: her-photo-2 -->
+    <section class="scene discovery-scene" id="scene-discovery" data-scene="discovery">
+      <div class="scene-content">
+        <p class="whisper">There is one more thing here.<span class="am">እዚህ ሌላ ነገር አለ።</span></p>
+        <button class="discovery-orb" id="discovery-orb" type="button" aria-label="Find the hidden memory">
+          <span class="orb-core"></span><span class="orb-ring"></span>
+        </button>
+        <p class="discovery-prompt" id="discovery-prompt">Find it</p>
+        <div class="story-photo story-photo-discovery" id="discovery-photo">
+          <img src="./assets/her-photo-2.jpg" alt="A hidden memory of her" loading="lazy">
+        </div>
+        <p class="discovery-found" id="discovery-found">You found something.<span class="am">አንድ ነገር አገኘሽ።</span></p>
+      </div>
+    </section>
+
+    <!-- SCENE 6 — My anchor portrait -->
     <section class="scene" id="scene-me" data-scene="me">
       <div class="scene-content reveal-content">
         <p class="caption fade-el pre-photo">Someone I'm grateful to know.<span class="am">የማውቃት አንድ ሰው ስላለ
             አመሰግናለሁ።</span></p>
-        <div class="carousel-wrap" id="my-carousel" data-count="2">
-          <div class="carousel-track" id="my-track">
-            <div class="carousel-card"><img src="./assets/my-photo-1.jpg" alt="A photo of me" loading="lazy"></div>
-            <div class="carousel-card"><img src="./assets/my-photo-2.jpg" alt="A photo of me" loading="lazy"></div>
-          </div>
+        <div class="story-photo story-photo-anchor" id="anchor-photo-me">
+          <img src="./assets/my-photo-1.jpg" alt="A photo of me" loading="eager">
         </div>
-        <div class="carousel-dots" id="my-dots" aria-hidden="true"></div>
-        <p class="carousel-hint">swipe</p>
         <p class="caption fade-el">And someone who wanted to build<br>this little world, just for you.<span
             class="am">እና ላንቺ ብቻ ይህን ትንሽ ዓለም<br>ለመስራት የፈለገ ሰው።</span></p>
       </div>
@@ -145,6 +149,19 @@
       </div>
     </section>
 
+    <!-- SCENE 11 — Memory frame: her-photo-3 -->
+    <section class="scene memory-scene" id="scene-memory" data-scene="memory">
+      <div class="scene-content">
+        <p class="memory-kicker">Some moments don't need many words.</p>
+        <button class="memory-frame" id="memory-frame" type="button" aria-label="Reveal a memory">
+          <span class="memory-light"></span>
+          <span class="memory-frame-inner"><img src="./assets/her-photo-3.jpg" alt="A quiet memory of her"
+              loading="lazy"></span>
+        </button>
+        <p class="memory-hint" id="memory-hint">Touch the frame</p>
+      </div>
+    </section>
+
     <!-- SCENE 7 — Future / dream, constellation -->
     <section class="scene" id="scene-future" data-scene="future">
       <div class="scene-content">
@@ -158,7 +175,21 @@
       </div>
     </section>
 
-    <!-- SCENE 8 — Finale -->
+    <!-- SCENE 13 — Final contact moment: my-photo-2 -->
+    <section class="scene final-photo-scene" id="scene-final-photo" data-scene="final-photo">
+      <div class="scene-content">
+        <div class="story-photo story-photo-final" id="final-photo">
+          <img src="./assets/my-photo-2.jpg" alt="A final photo of me" loading="lazy">
+        </div>
+        <p class="final-photo-line">Before the last page, one more hello.</p>
+        <div class="contact-reveal" id="contact-reveal">
+          <button class="contact-btn" id="contact-btn" type="button">Talk to Teshe <span
+              aria-hidden="true">💬</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 14 — Finale -->
     <section class="scene" id="scene-finale" data-scene="finale">
       <div class="scene-content">
         <p class="finale-year">Happy New Year 2019</p>
