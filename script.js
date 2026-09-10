@@ -268,6 +268,8 @@ function setNavigationDisabled(disabled) {
   });
 }
 
+let cameraStream = null;
+
 function leaveScene(scene) {
   if (scene.id === "scene-object") {
     crystal.visible = false;
@@ -275,6 +277,7 @@ function leaveScene(scene) {
     document.getElementById("object-label").textContent = "Touch it.";
     document.getElementById("open-btn").setAttribute("hidden", "");
   }
+  if (scene.id === "scene-camera") stopCamera();
 }
 
 function enterScene(index) {
@@ -528,9 +531,93 @@ memoryFrame.addEventListener("click", () => {
   document.getElementById("memory-hint").textContent = "A moment worth keeping";
 });
 
-document.getElementById("contact-btn").addEventListener("click", (event) => {
+const loveScene = document.getElementById("scene-me");
+const loveTrigger = document.getElementById("love-trigger");
+const loveHint = document.getElementById("love-hint");
+let loveRevealed = false;
+loveTrigger.addEventListener("click", () => {
+  if (loveRevealed) return;
+  loveRevealed = true;
+  tap(18);
+  loveScene.classList.add("is-beating");
+  gsap.to(particleMat, { opacity: .9, size: .07, duration: .8 });
+  gsap.to(particles.scale, { x: .55, y: .55, z: .55, duration: 1.1, ease: "power2.inOut" });
+  gsap.to(camera.position, { z: 6.5, duration: 1.2, ease: "power2.inOut" });
+  loveHint.textContent = "Wait...";
+  setTimeout(() => {
+    loveScene.classList.remove("is-beating");
+    loveScene.classList.add("is-revealed");
+    loveHint.textContent = "You found the answer";
+    gsap.to(particles.scale, { x: 1, y: 1, z: 1, duration: 1.4, ease: "power2.out" });
+    gsap.to(camera.position, { z: 8, duration: 1.3, ease: "power2.out" });
+  }, prefersReducedMotion ? 20 : 1250);
+});
+
+const cameraTrigger = document.getElementById("camera-trigger");
+const cameraOverlay = document.getElementById("camera-overlay");
+const cameraVideo = document.getElementById("camera-video");
+const cameraStatus = document.getElementById("camera-status");
+const cameraClose = document.getElementById("camera-close");
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach((track) => track.stop());
+    cameraStream = null;
+  }
+  cameraVideo.srcObject = null;
+  cameraOverlay.hidden = true;
+}
+
+async function openCamera() {
+  if (!CONFIG.cameraEnabled) {
+    cameraStatus.textContent = "The camera moment is unavailable in this version.";
+    return;
+  }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    cameraStatus.textContent = "Camera access is unavailable here. The story can continue without it.";
+    return;
+  }
   tap(10);
-  event.currentTarget.textContent = "A little hello, sent with care";
+  cameraOverlay.hidden = false;
+  cameraStatus.textContent = "Asking for permission...";
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    cameraVideo.srcObject = cameraStream;
+    cameraStatus.textContent = "";
+  } catch (error) {
+    cameraStatus.textContent = "No camera was opened. You can continue whenever you're ready.";
+    cameraOverlay.hidden = false;
+  }
+}
+
+cameraTrigger.addEventListener("click", openCamera);
+cameraClose.addEventListener("click", () => {
+  tap(8);
+  stopCamera();
+  cameraStatus.textContent = "Your camera stays off until you choose to open it.";
+});
+
+const contactActions = document.getElementById("contact-actions");
+if (CONFIG.telegramUrl) {
+  const telegram = document.createElement("a");
+  telegram.className = "contact-btn";
+  telegram.href = CONFIG.telegramUrl;
+  telegram.target = "_blank";
+  telegram.rel = "noopener noreferrer";
+  telegram.textContent = "Talk to Teshe 💬";
+  contactActions.appendChild(telegram);
+}
+if (CONFIG.phoneNumber) {
+  const call = document.createElement("a");
+  call.className = "contact-btn call-btn";
+  call.href = `tel:${CONFIG.phoneNumber}`;
+  call.textContent = "Call Teshe 📞";
+  contactActions.appendChild(call);
+}
+
+document.getElementById("replay-btn").addEventListener("click", () => {
+  tap(10);
+  window.location.reload();
 });
 
 /* ================================================================
