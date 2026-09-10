@@ -266,12 +266,12 @@ function enterScene(index) {
     crystal.visible = true;
     gsap.fromTo(crystal.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1, duration: 1.1, ease: "back.out(1.4)" });
     gsap.to(camera.position, { z: 5.5, duration: 1.2, ease: "power2.out" });
-    gsap.delayedCall(prefersReducedMotion ? 0 : .7, () => {
+    setTimeout(() => {
       document.getElementById("object-label").textContent = "Something is waiting inside.";
       const button = document.getElementById("open-btn");
-      button.hidden = false;
+      button.removeAttribute("hidden");
       gsap.fromTo(button, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .6 });
-    });
+    }, prefersReducedMotion ? 0 : 700);
   }
 
   if (scene.id === "scene-future") {
