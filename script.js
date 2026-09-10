@@ -194,150 +194,118 @@ window.addEventListener("pointermove", (e) => {
 });
 
 /* ================================================================
-   PRELOADER
+   CINEMATIC SCENE CONTROLLER
    ================================================================ */
-const preloader = document.getElementById("preloader");
-const preloaderFill = document.getElementById("preloader-fill");
-const preloaderText = document.getElementById("preloader-text");
+const scenes = Array.from(document.querySelectorAll(".scene"));
+const progressLabel = document.getElementById("story-progress-label");
+const progressFill = document.getElementById("story-progress-fill");
+let activeScene = 0;
+let sceneLocked = false;
+let fired = false;
 
-function preloadAssets() {
-  return new Promise((resolve) => {
-    const toLoad = [...CONFIG.herPhotos, ...CONFIG.myPhotos];
-    let loaded = 0;
-    const update = () => {
-      loaded++;
-      const pct = Math.round((loaded / toLoad.length) * 100);
-      preloaderFill.style.width = pct + "%";
-      if (loaded >= toLoad.length) {
-        preloaderText.textContent = "Ready?";
-        setTimeout(resolve, 500);
-      }
-    };
-    toLoad.forEach((src) => {
-      const img = new Image();
-      img.onload = update;
-      img.onerror = update;
-      img.src = src;
-    });
-    // safety timeout so it never hangs
-    setTimeout(resolve, 4000);
-  });
+function addSceneNavigation(scene, index) {
+  if (index === 0) return;
+  const nav = document.createElement("div");
+  nav.className = "scene-nav";
+  nav.innerHTML = `<button class="nav-back" type="button" aria-label="Go back">Back</button><button class="nav-next" type="button" aria-label="Continue">Next</button>`;
+  nav.querySelector(".nav-back").addEventListener("click", () => goToScene(index - 1, -1));
+  nav.querySelector(".nav-next").addEventListener("click", () => goToScene(index + 1, 1));
+  scene.appendChild(nav);
 }
 
-preloadAssets().then(() => {
-  preloader.classList.add("hidden");
-});
+scenes.forEach(addSceneNavigation);
 
-/* ================================================================
-   SCROLL-DRIVEN STORY (GSAP + ScrollTrigger)
-   ================================================================ */
-gsap.registerPlugin(ScrollTrigger);
+function updateProgress(index) {
+  progressLabel.textContent = `${String(index + 1).padStart(2, "0")} / ${String(scenes.length).padStart(2, "0")}`;
+  progressFill.style.width = `${((index + 1) / scenes.length) * 100}%`;
+}
 
-// Generic fade-up reveal for tagged elements
-document.querySelectorAll(".fade-el").forEach((el, i) => {
-  ScrollTrigger.create({
-    trigger: el,
-    start: "top 82%",
-    onEnter: () => el.classList.add("in-view"),
+function enterScene(index) {
+  const scene = scenes[index];
+  scene.querySelectorAll(".fade-el").forEach((el, i) => {
+    el.classList.remove("in-view");
+    setTimeout(() => el.classList.add("in-view"), prefersReducedMotion ? 0 : 120 + i * 100);
   });
-});
 
-// Photo frames
-["her-frame", "my-frame"].forEach((id) => {
-  const el = document.getElementById(id);
-  ScrollTrigger.create({
-    trigger: el,
-    start: "top 78%",
-    onEnter: () => el.classList.add("in-view"),
-  });
-});
-
-// Object scene: reveal crystal, camera dolly, then show the OPEN button
-const objectSection = document.getElementById("scene-object");
-const objectLabel = document.getElementById("object-label");
-const openBtn = document.getElementById("open-btn");
-
-ScrollTrigger.create({
-  trigger: objectSection,
-  start: "top 70%",
-  end: "bottom top",
-  onEnter: () => {
+  if (scene.id === "scene-object") {
     crystal.visible = true;
-    gsap.fromTo(crystal.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1, duration: 1.4, ease: "back.out(1.4)" });
-    gsap.to(camera.position, { z: 5.5, duration: 1.6, ease: "power2.out" });
-    gsap.delayedCall(1.2, () => {
-      objectLabel.textContent = "Something is waiting inside.";
-      openBtn.hidden = false;
-      gsap.fromTo(openBtn, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.7 });
+    gsap.fromTo(crystal.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1, duration: 1.1, ease: "back.out(1.4)" });
+    gsap.to(camera.position, { z: 5.5, duration: 1.2, ease: "power2.out" });
+    gsap.delayedCall(prefersReducedMotion ? 0 : .7, () => {
+      document.getElementById("object-label").textContent = "Something is waiting inside.";
+      const button = document.getElementById("open-btn");
+      button.hidden = false;
+      gsap.fromTo(button, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .6 });
     });
-  },
-  onLeaveBack: () => {
-    gsap.to(camera.position, { z: 8, duration: 1 });
   }
-});
 
-let crystalOpened = false;
-openBtn.addEventListener("click", () => {
-  if (crystalOpened) return;
-  crystalOpened = true;
-  tap(18);
-
-  gsap.to(crystalMat, { emissiveIntensity: 1.4, duration: 0.4, yoyo: true, repeat: 1 });
-  gsap.to(crystal.scale, {
-    x: 2.4, y: 2.4, z: 2.4, duration: 0.9, ease: "power3.in",
-    onComplete: () => {
-      gsap.to(crystal.scale, { x: 0, y: 0, z: 0, duration: 0.5, ease: "power2.in", onComplete: () => { crystal.visible = false; } });
-      gsap.to(camera.position, { z: 4.5, duration: 0.6, yoyo: true, repeat: 1, ease: "power1.inOut" });
-    }
-  });
-  objectLabel.textContent = "";
-  openBtn.hidden = true;
-
-  // scroll forward into the reveal
-  const nextScene = document.getElementById("scene-her");
-  gsap.delayedCall(0.7, () => {
-    nextScene.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-  });
-});
-
-// Constellation scene: fade nodes/lines/dots in as it enters, converge the two dots
-const futureSection = document.getElementById("scene-future");
-ScrollTrigger.create({
-  trigger: futureSection,
-  start: "top 65%",
-  end: "bottom top",
-  onEnter: () => {
-    gsap.to(nodeMat, { opacity: 0.8, duration: 1.2 });
-    gsap.to(lineMat, { opacity: 0.28, duration: 1.6, delay: 0.3 });
-    gsap.to(dotMatA, { opacity: 1, duration: 0.8, delay: 0.6 });
-    gsap.to(dotMatB, { opacity: 1, duration: 0.8, delay: 0.6 });
-    gsap.to(dotA.position, { x: -0.4, duration: 2.2, delay: 1, ease: "power2.inOut" });
-    gsap.to(dotB.position, { x: 0.4, duration: 2.2, delay: 1, ease: "power2.inOut" });
-  },
-  onLeave: () => {
-    gsap.to([nodeMat, lineMat, dotMatA, dotMatB], { opacity: 0, duration: 0.8 });
-  },
-  onEnterBack: () => {
-    gsap.to(nodeMat, { opacity: 0.8, duration: 0.8 });
-    gsap.to(lineMat, { opacity: 0.28, duration: 0.8 });
+  if (scene.id === "scene-future") {
+    gsap.to(nodeMat, { opacity: .8, duration: 1 });
+    gsap.to(lineMat, { opacity: .28, duration: 1.3, delay: .2 });
+    gsap.to([dotMatA, dotMatB], { opacity: 1, duration: .8, delay: .4 });
+    gsap.to(dotA.position, { x: -.4, duration: 1.8, delay: .7, ease: "power2.inOut" });
+    gsap.to(dotB.position, { x: .4, duration: 1.8, delay: .7, ease: "power2.inOut" });
   }
-});
 
-// Finale: warm gold "firework" particle burst
-const finaleSection = document.getElementById("scene-finale");
-let fired = false;
-ScrollTrigger.create({
-  trigger: finaleSection,
-  start: "top 60%",
-  onEnter: () => {
-    if (fired) return;
+  if (scene.id === "scene-finale" && !fired) {
     fired = true;
     burstParticles();
     fireMultipleBursts();
-    document.querySelectorAll("#scene-finale .scene-content > *").forEach((el, i) => {
-      gsap.fromTo(el, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1, delay: i * 0.18, ease: "power2.out" });
+    scene.querySelectorAll(".scene-content > *").forEach((el, i) => {
+      gsap.fromTo(el, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .8, delay: i * .14, ease: "power2.out" });
     });
   }
+}
+
+function goToScene(index, direction = 1) {
+  if (sceneLocked || index < 0 || index >= scenes.length || index === activeScene) return;
+  sceneLocked = true;
+  const current = scenes[activeScene];
+  current.classList.add("is-leaving");
+  current.classList.remove("is-active");
+  activeScene = index;
+  const next = scenes[activeScene];
+  next.style.transform = `translate3d(${direction > 0 ? "7vw" : "-7vw"}, 0, 0) scale(.97)`;
+  next.classList.add("is-active");
+  updateProgress(activeScene);
+  enterScene(activeScene);
+  tap(10);
+  setTimeout(() => {
+    current.classList.remove("is-leaving");
+    next.style.transform = "";
+    sceneLocked = false;
+  }, prefersReducedMotion ? 20 : 780);
+}
+
+function goForward() { goToScene(activeScene + 1, 1); }
+
+scenes[0].classList.add("is-active");
+updateProgress(0);
+enterScene(0);
+window.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight" || event.key === "Enter") goForward();
+  if (event.key === "ArrowLeft" || event.key === "Escape") goToScene(activeScene - 1, -1);
+});
+
+let swipeStartX = 0;
+document.getElementById("journey").addEventListener("pointerdown", (event) => { swipeStartX = event.clientX; });
+document.getElementById("journey").addEventListener("pointerup", (event) => {
+  const distance = event.clientX - swipeStartX;
+  if (Math.abs(distance) > 70) goToScene(activeScene + (distance < 0 ? 1 : -1), distance < 0 ? 1 : -1);
+});
+
+const objectLabel = document.getElementById("object-label");
+const openBtn = document.getElementById("open-btn");
+openBtn.addEventListener("click", () => {
+  if (sceneLocked) return;
+  tap(18);
+  gsap.to(crystalMat, { emissiveIntensity: 1.4, duration: .35, yoyo: true, repeat: 1 });
+  gsap.to(crystal.scale, { x: 2.4, y: 2.4, z: 2.4, duration: .7, ease: "power3.in", onComplete: () => {
+    crystal.visible = false;
+    goToScene(activeScene + 1, 1);
+  }});
+  objectLabel.textContent = "";
+  openBtn.hidden = true;
 });
 
 function burstParticles() {
@@ -359,8 +327,7 @@ enterBtn.addEventListener("click", () => {
   soundToggle.hidden = false;
   gsap.fromTo(soundToggle, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.4 });
 
-  const discoverSection = document.getElementById("scene-discover");
-  discoverSection.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+  goForward();
 });
 
 /* ================================================================
@@ -451,19 +418,12 @@ function initCarousel(wrapId, trackId, dotsId) {
   wrap.addEventListener("pointerdown", () => { hasInteracted = true; }, { once: true });
   if (!prefersReducedMotion && count > 1) {
     let idlePhase = 0;
-    ScrollTrigger.create({
-      trigger: wrap,
-      start: "top 85%",
-      onEnter: () => {
-        const nudge = () => {
-          if (hasInteracted || dragging) return;
-          idlePhase += 1;
-          applyRotation(rotation + (idlePhase % 2 === 0 ? 6 : -6), true);
-          setTimeout(() => { if (!hasInteracted) applyRotation(rotation, true); }, 500);
-        };
-        setTimeout(nudge, 900);
-      }
-    });
+    setTimeout(() => {
+      if (hasInteracted || dragging) return;
+      idlePhase += 1;
+      applyRotation(rotation + (idlePhase % 2 === 0 ? 6 : -6), true);
+      setTimeout(() => { if (!hasInteracted) applyRotation(rotation, true); }, 500);
+    }, 900);
   }
 
   goTo(0, false);
@@ -471,24 +431,6 @@ function initCarousel(wrapId, trackId, dotsId) {
 
 initCarousel("her-carousel", "her-track", "her-dots");
 initCarousel("my-carousel", "my-track", "my-dots");
-
-/* ================================================================
-   SCROLL-TIED CAMERA PARALLAX (continuous, whole-page depth motion)
-   ================================================================ */
-if (!prefersReducedMotion) {
-  ScrollTrigger.create({
-    trigger: document.body,
-    start: "top top",
-    end: "bottom bottom",
-    scrub: 1.2,
-    onUpdate: (self) => {
-      const p = self.progress; // 0 -> 1 across the whole journey
-      camera.position.x = Math.sin(p * Math.PI * 2) * 0.35;
-      camera.position.y = -0.3 + Math.sin(p * Math.PI * 4) * 0.15;
-      particles.rotation.z = p * 1.2;
-    }
-  });
-}
 
 /* ================================================================
    DEVICE TILT PARALLAX (subtle gyroscope-driven depth on mobile)
