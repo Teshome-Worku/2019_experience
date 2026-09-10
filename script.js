@@ -193,6 +193,41 @@ window.addEventListener("pointermove", (e) => {
   lastX = e.clientX; lastY = e.clientY;
 });
 
+const preloader = document.getElementById("preloader");
+const preloaderFill = document.getElementById("preloader-fill");
+const preloaderText = document.getElementById("preloader-text");
+
+function preloadAssets() {
+  const sources = [...CONFIG.herPhotos, ...CONFIG.myPhotos];
+  let loaded = 0;
+  const count = () => {
+    loaded += 1;
+    preloaderFill.style.width = `${Math.round((loaded / sources.length) * 100)}%`;
+    if (loaded === sources.length) {
+      preloaderText.textContent = "Ready?";
+      setTimeout(() => preloader.classList.add("hidden"), prefersReducedMotion ? 0 : 450);
+    }
+  };
+
+  sources.forEach((src) => {
+    const image = new Image();
+    let counted = false;
+    const countOnce = () => {
+      if (counted) return;
+      counted = true;
+      count();
+    };
+    image.onload = countOnce;
+    image.onerror = countOnce;
+    image.src = src;
+    if (image.complete) countOnce();
+  });
+
+  setTimeout(() => preloader.classList.add("hidden"), 4000);
+}
+
+preloadAssets();
+
 /* ================================================================
    CINEMATIC SCENE CONTROLLER
    ================================================================ */
