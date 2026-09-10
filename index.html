@@ -38,7 +38,12 @@
   </button>
   <audio id="bg-audio" loop preload="none"></audio>
 
-  <main id="journey">
+  <div class="story-progress" aria-label="Story progress">
+    <span id="story-progress-label">01 / 10</span>
+    <span class="story-progress-line"><span id="story-progress-fill"></span></span>
+  </div>
+
+  <main id="journey" aria-live="polite">
 
     <!-- SCENE 1 — Opening -->
     <section class="scene" id="scene-open" data-scene="open">
