@@ -13,6 +13,9 @@ const CONFIG = {
   herPhoto: "./assets/her-photo.jpg",
   myPhoto: "./assets/my-photo.jpg",
   musicPath: "",         // e.g. "./assets/song.mp3" — leave blank and the sound toggle stays hidden
+  telegramUrl: "",       // add your real https://t.me/... URL to show Talk to Teshe
+  phoneNumber: "",       // add your real number to show Call Teshe
+  cameraEnabled: true,
   newYearLineAmharic: "እንኳን ለ2019 ዓ.ም አደረሰሽ ❤️"
 };
 ```
@@ -44,16 +47,17 @@ Either way you'll get a private-feeling link you can send her directly — no lo
 ## The journey, scene by scene
 
 1. **Open** — "2019 / Before the new year begins…" + Enter button (English + Amharic)
-2. **Discover** — a quiet scroll prompt
+2. **Discover** — a quiet prompt with tap-driven navigation
 3. **The object** — a faceted crystal she can drag to tilt; tapping "See what's inside" triggers the transition
 4. **Her portrait** — one anchor image arrives as a quiet physical frame
 5. **Hidden discovery** — tapping a small glowing orb reveals her second photo from blur and depth
-6. **Your portrait** — one anchor image grounds the personal message
-7. **Four short message beats** — appreciation, closeness, honesty, and space to choose — each with an Amharic line underneath
-8. **Memory frame** — her third photo materializes from blur when the frame is touched
-9. **The future / dream scene** — a constellation of particles slowly connecting, two points drawing toward each other
-10. **Final photo** — a calm reveal of the second personal photo, followed by the delayed contact action
-11. **Finale** — "Happy New Year 2019", the Amharic greeting, a closing wish, and a real 3D firework burst
+6. **Who really loves you?** — a heartbeat and particle pause resolve into your photo and a short message
+7. **Look around** — an optional, permission-based camera overlay that can be closed at any time
+8. **Four short message beats** — appreciation, closeness, honesty, and space to choose — each with an Amharic line underneath
+9. **Memory frame** — her third photo materializes from blur when the frame is touched
+10. **The future / dream scene** — a constellation of particles slowly connecting, two points drawing toward each other
+11. **Final photo** — a calm reveal of the second personal photo, followed by a delayed, configurable contact action
+12. **Finale** — "Happy New Year 2019", the Amharic greeting, a closing wish, and a real 3D firework burst
 
 ## The music
 
@@ -71,7 +75,7 @@ Every major line now has an Amharic translation underneath the English, since sh
 
 ## Notes on performance
 
-Particle count, firework density, and antialiasing all scale down automatically on small screens or devices reporting low memory, so it should stay smooth on a mid-range Android phone. The two anchor photos preload early; the three discovery photos are deferred. `prefers-reduced-motion` is respected throughout, and the story uses tap-driven scene transitions rather than page scrolling.
+Particle count, firework density, and antialiasing all scale down automatically on small screens or devices reporting low memory, so it should stay smooth on a mid-range Android phone. The two early photos preload; later discoveries are deferred. `prefers-reduced-motion` is respected throughout, and the story uses tap-driven scene transitions rather than page scrolling. Camera access is never requested until the visitor taps `Look around`.
 
 ## New in this pass
 

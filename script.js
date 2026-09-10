@@ -73,7 +73,6 @@ const crystalMat = new THREE.MeshPhysicalMaterial({
   metalness: 0.3,
   roughness: 0.15,
   transmission: 0.55,
-  thickness: 1.2,
   clearcoat: 0.6,
   ior: 1.4,
   emissive: 0x35240f,
