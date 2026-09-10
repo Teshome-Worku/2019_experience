@@ -198,7 +198,7 @@ const preloaderFill = document.getElementById("preloader-fill");
 const preloaderText = document.getElementById("preloader-text");
 
 function preloadAssets() {
-  const sources = [...CONFIG.herPhotos, ...CONFIG.myPhotos];
+  const sources = [CONFIG.herPhotos[0], CONFIG.myPhotos[0]];
   let loaded = 0;
   const count = () => {
     loaded += 1;
@@ -272,6 +272,18 @@ function enterScene(index) {
       button.removeAttribute("hidden");
       gsap.fromTo(button, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .6 });
     }, prefersReducedMotion ? 0 : 700);
+  }
+
+  if (scene.id === "scene-discovery") {
+    document.getElementById("discovery-prompt").textContent = "Find it";
+  }
+
+  if (scene.id === "scene-memory") {
+    document.getElementById("memory-hint").textContent = "Touch the frame";
+  }
+
+  if (scene.id === "scene-final-photo") {
+    setTimeout(() => scene.classList.add("is-ready"), prefersReducedMotion ? 0 : 1900);
   }
 
   if (scene.id === "scene-future") {
@@ -467,6 +479,28 @@ function initCarousel(wrapId, trackId, dotsId) {
 
 initCarousel("her-carousel", "her-track", "her-dots");
 initCarousel("my-carousel", "my-track", "my-dots");
+
+const discoveryScene = document.getElementById("scene-discovery");
+const discoveryOrb = document.getElementById("discovery-orb");
+discoveryOrb.addEventListener("click", () => {
+  if (discoveryScene.classList.contains("is-found")) return;
+  tap(12);
+  discoveryScene.classList.add("is-found");
+  document.getElementById("discovery-prompt").textContent = "";
+});
+
+const memoryFrame = document.getElementById("memory-frame");
+memoryFrame.addEventListener("click", () => {
+  if (memoryFrame.classList.contains("is-revealed")) return;
+  tap(12);
+  memoryFrame.classList.add("is-revealed");
+  document.getElementById("memory-hint").textContent = "A moment worth keeping";
+});
+
+document.getElementById("contact-btn").addEventListener("click", (event) => {
+  tap(10);
+  event.currentTarget.textContent = "A little hello, sent with care";
+});
 
 /* ================================================================
    DEVICE TILT PARALLAX (subtle gyroscope-driven depth on mobile)
