@@ -239,12 +239,15 @@ let sceneLocked = false;
 let fired = false;
 
 function addSceneNavigation(scene, index) {
-  if (index === 0) return;
   const nav = document.createElement("div");
   nav.className = "scene-nav";
-  nav.innerHTML = `<button class="nav-back" type="button" aria-label="Go back">Back</button><button class="nav-next" type="button" aria-label="Continue">Next</button>`;
-  nav.querySelector(".nav-back").addEventListener("click", () => goToScene(index - 1, -1));
-  nav.querySelector(".nav-next").addEventListener("click", () => goToScene(index + 1, 1));
+  nav.innerHTML = `<button class="nav-back" type="button" aria-label="Go to previous scene">Previous</button><button class="nav-next" type="button" aria-label="Go to next scene">Next</button>`;
+  const previousButton = nav.querySelector(".nav-back");
+  const nextButton = nav.querySelector(".nav-next");
+  previousButton.hidden = index === 0;
+  nextButton.hidden = index === scenes.length - 1;
+  previousButton.addEventListener("click", () => goToScene(index - 1, -1));
+  nextButton.addEventListener("click", () => goToScene(index + 1, 1));
   scene.appendChild(nav);
 }
 
@@ -253,6 +256,13 @@ scenes.forEach(addSceneNavigation);
 function updateProgress(index) {
   progressLabel.textContent = `${String(index + 1).padStart(2, "0")} / ${String(scenes.length).padStart(2, "0")}`;
   progressFill.style.width = `${((index + 1) / scenes.length) * 100}%`;
+}
+
+function setNavigationDisabled(disabled) {
+  document.querySelectorAll(".scene-nav button").forEach((button) => {
+    button.disabled = disabled;
+    button.setAttribute("aria-disabled", String(disabled));
+  });
 }
 
 function enterScene(index) {
@@ -313,6 +323,7 @@ function enterScene(index) {
 function goToScene(index, direction = 1) {
   if (sceneLocked || index < 0 || index >= scenes.length || index === activeScene) return;
   sceneLocked = true;
+  setNavigationDisabled(true);
   const current = scenes[activeScene];
   current.classList.add("is-leaving");
   current.classList.remove("is-active");
@@ -327,6 +338,7 @@ function goToScene(index, direction = 1) {
     current.classList.remove("is-leaving");
     next.style.transform = "";
     sceneLocked = false;
+    setNavigationDisabled(false);
   }, prefersReducedMotion ? 20 : 780);
 }
 

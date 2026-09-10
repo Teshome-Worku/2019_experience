@@ -226,8 +226,17 @@ img {
   background: rgba(207, 162, 94, .12);
 }
 
+.scene-nav button:disabled {
+  cursor: default;
+  opacity: .45;
+}
+
 .scene-nav button:active {
   transform: scale(.94);
+}
+
+.scene-nav button[hidden] {
+  display: none;
 }
 
 .scene-nav .nav-back {
@@ -1014,9 +1023,6 @@ button:focus-visible {
     padding: 10px 11px;
   }
 
-  .scene-nav .nav-back {
-    display: none;
-  }
 }
 
 /* ============================================
