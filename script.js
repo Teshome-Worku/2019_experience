@@ -265,6 +265,15 @@ function setNavigationDisabled(disabled) {
   });
 }
 
+function leaveScene(scene) {
+  if (scene.id === "scene-object") {
+    crystal.visible = false;
+    crystal.scale.set(1, 1, 1);
+    document.getElementById("object-label").textContent = "Touch it.";
+    document.getElementById("open-btn").setAttribute("hidden", "");
+  }
+}
+
 function enterScene(index) {
   const scene = scenes[index];
   scene.querySelectorAll(".fade-el").forEach((el, i) => {
@@ -325,6 +334,7 @@ function goToScene(index, direction = 1) {
   sceneLocked = true;
   setNavigationDisabled(true);
   const current = scenes[activeScene];
+  leaveScene(current);
   current.classList.add("is-leaving");
   current.classList.remove("is-active");
   activeScene = index;
