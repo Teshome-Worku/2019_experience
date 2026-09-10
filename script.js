@@ -283,7 +283,13 @@ function enterScene(index) {
   }
 
   if (scene.id === "scene-final-photo") {
-    setTimeout(() => scene.classList.add("is-ready"), prefersReducedMotion ? 0 : 1900);
+    setTimeout(() => {
+      scene.classList.add("is-ready");
+      const contact = document.getElementById("contact-reveal");
+      contact.style.opacity = "1";
+      contact.style.transform = "translateY(0)";
+      contact.style.pointerEvents = "auto";
+    }, prefersReducedMotion ? 0 : 1900);
   }
 
   if (scene.id === "scene-future") {
