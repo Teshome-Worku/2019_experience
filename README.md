@@ -46,11 +46,14 @@ Either way you'll get a private-feeling link you can send her directly — no lo
 1. **Open** — "2019 / Before the new year begins…" + Enter button (English + Amharic)
 2. **Discover** — a quiet scroll prompt
 3. **The object** — a faceted crystal she can drag to tilt; tapping "See what's inside" triggers the transition
-4. **Her photos** — a 3D swipeable gallery of all three photos, in a tilted glass ring she can drag through
-5. **Your photos** — the same gallery treatment for both of your photos
-6. **Four short message beats** — appreciation, closeness, honesty, and space to choose — each with an Amharic line underneath
-7. **The future / dream scene** — a constellation of particles slowly connecting, two points drawing toward each other
-8. **Finale** — "Happy New Year 2019", the Amharic greeting, a closing wish, and a real 3D firework burst
+4. **Her portrait** — one anchor image arrives as a quiet physical frame
+5. **Hidden discovery** — tapping a small glowing orb reveals her second photo from blur and depth
+6. **Your portrait** — one anchor image grounds the personal message
+7. **Four short message beats** — appreciation, closeness, honesty, and space to choose — each with an Amharic line underneath
+8. **Memory frame** — her third photo materializes from blur when the frame is touched
+9. **The future / dream scene** — a constellation of particles slowly connecting, two points drawing toward each other
+10. **Final photo** — a calm reveal of the second personal photo, followed by the delayed contact action
+11. **Finale** — "Happy New Year 2019", the Amharic greeting, a closing wish, and a real 3D firework burst
 
 ## The music
 
@@ -68,11 +71,11 @@ Every major line now has an Amharic translation underneath the English, since sh
 
 ## Notes on performance
 
-Particle count, firework density, and antialiasing all scale down automatically on small screens or devices reporting low memory, so it should stay smooth on a mid-range Android phone. `prefers-reduced-motion` is respected throughout — the scroll-tied camera drift, gyroscope tilt, and idle carousel nudge all turn off if that OS setting is on.
+Particle count, firework density, and antialiasing all scale down automatically on small screens or devices reporting low memory, so it should stay smooth on a mid-range Android phone. The two anchor photos preload early; the three discovery photos are deferred. `prefers-reduced-motion` is respected throughout, and the story uses tap-driven scene transitions rather than page scrolling.
 
 ## New in this pass
 
-- All 5 of your photos are now used, in draggable 3D carousels (3 for her, 2 for you) instead of single static images
+- All 5 photos now have distinct story roles: two anchor portraits, one hidden orb discovery, one touch-to-focus memory frame, and one delayed final/contact reveal
 - Bilingual English/Amharic text throughout, not just the finale
 - A continuous, scroll-linked camera drift through the whole page for a more three-dimensional feel, plus optional gyroscope tilt on phones that support it (asked for permission on iOS, applied automatically elsewhere)
 - A real expanding particle firework system at the finale, not just a fade
