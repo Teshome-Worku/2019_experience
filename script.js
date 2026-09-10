@@ -335,10 +335,11 @@ openBtn.addEventListener("click", () => {
   if (sceneLocked) return;
   tap(18);
   gsap.to(crystalMat, { emissiveIntensity: 1.4, duration: .35, yoyo: true, repeat: 1 });
-  gsap.to(crystal.scale, { x: 2.4, y: 2.4, z: 2.4, duration: .7, ease: "power3.in", onComplete: () => {
+  gsap.to(crystal.scale, { x: 2.4, y: 2.4, z: 2.4, duration: .7, ease: "power3.in" });
+  setTimeout(() => {
     crystal.visible = false;
     goToScene(activeScene + 1, 1);
-  }});
+  }, prefersReducedMotion ? 20 : 760);
   objectLabel.textContent = "";
   openBtn.hidden = true;
 });
